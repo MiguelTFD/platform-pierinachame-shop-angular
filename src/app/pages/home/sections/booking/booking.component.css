@@ -1,15 +1,200 @@
-/* Mensajes de error del formulario (nuevo en la versión Angular).
-   Selectores un poco más fuertes para ganarle a ".form-card small" del CSS global. */
-.form-card .field small.field-err {
+
+.booking-box.apilado {
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+.booking-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.booking-top .booking-map { margin-top: 0; }
+.form-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 32px;
+  align-items: start;
+}
+.form-col > .paso:first-child { margin-top: 18px; }
+
+@media (max-width: 900px) {
+  .booking-top,
+  .form-cols { grid-template-columns: 1fr; gap: 24px; }
+  .form-cols { gap: 0; }
+  .booking-box.apilado { gap: 28px; }
+}
+
+
+.form-card .field-err,
+.form-card small.field-err {
   display: block;
-  margin-top: 6px;
+  margin: 6px 0 10px;
   text-align: left;
   color: #B5483F;
   font-size: .8rem;
   line-height: 1.35;
 }
 
-.form-card .field input.ng-invalid.ng-touched,
-.form-card .field select.ng-invalid.ng-touched {
+.form-card .field input.ng-invalid.ng-touched {
   border-color: #B5483F;
 }
+
+
+.form-card .paso {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 12px;
+  font-weight: 500;
+  font-size: .95rem;
+}
+.form-card .paso b {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--rose);
+  color: #fff;
+  font-size: .8rem;
+}
+
+
+.dias {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+  gap: 8px;
+}
+.dia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  border-radius: 14px;
+  border: 1.5px solid var(--sand);
+  background: #fff;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: .3s;
+}
+.dia small { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.dia b { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; line-height: 1.1; }
+.dia.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.dia.on small { color: rgba(255, 255, 255, .75); }
+
+/* ===== Horarios tipo cine ===== */
+.cine {
+  background: #fff;
+  border: 1px solid var(--sand);
+  border-radius: 18px;
+  padding: 18px 16px 14px;
+}
+.pantalla {
+  position: relative;
+  margin: 0 auto 20px;
+  width: 82%;
+  padding-top: 14px;
+  text-align: center;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* la "pantalla" curva del cine */
+.pantalla::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 10px;
+  border-top: 3px solid var(--rose);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 -6px 14px -6px var(--rose);
+}
+.franja { margin-bottom: 12px; }
+.franja-nombre {
+  display: block;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.asientos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+  gap: 6px;
+}
+.asiento {
+  min-height: 40px;
+  border-radius: 10px 10px 6px 6px;  /* forma de butaca */
+  border: 1.5px solid var(--hazel);
+  background: var(--cream);
+  font: 500 .85rem 'Jost', sans-serif;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.asiento:hover:not(:disabled) { border-color: var(--rose); transform: translateY(-1px); }
+.asiento.on { background: var(--rose); border-color: var(--rose); color: #fff; }
+.asiento.ocupado {
+  cursor: not-allowed;
+  color: #b9a9a0;
+  border-color: #eee4da;
+  background: repeating-linear-gradient(135deg, #f6f0ea 0 6px, #efe6dc 6px 12px);
+  text-decoration: line-through;
+}
+.sin-horarios { font-size: .85rem; color: var(--muted); margin: 6px 0 10px; }
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: .75rem;
+  color: var(--muted);
+}
+.leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+.leyenda i { width: 16px; height: 14px; border-radius: 5px 5px 3px 3px; display: inline-block; }
+.l-libre { background: var(--cream); border: 1.5px solid var(--hazel); }
+.l-ocupado { background: repeating-linear-gradient(135deg, #f6f0ea 0 4px, #efe6dc 4px 8px); border: 1.5px solid #eee4da; }
+.l-on { background: var(--rose); }
+
+.resumen-cita {
+  margin: 16px 0 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--rose-soft);
+  font-size: .9rem;
+}
+.resumen-cita i { color: var(--rose); margin-right: 4px; }
+
+.form-card > .btn { margin-top: 16px; }
+
+
+.form-horario {
+  max-width: 760px;
+  margin: 8px auto 0;
+}
+.form-horario .paso { justify-content: center; }
+.form-horario .franja-nombre { text-align: center; }
+.form-horario .asientos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.form-horario .asiento { width: 64px; }
+
+/* resumen, botón y texto final también centrados */
+.form-card > .resumen-cita,
+.form-card > .btn,
+.form-card > small {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.form-card > .btn { display: flex; justify-content: center; width: 100%; }
+.form-card > small { display: block; text-align: center; }
+.form-card > .resumen-cita { text-align: center; }

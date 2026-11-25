@@ -39,7 +39,8 @@ import { TransformationsComponent } from './sections/transformations/transformat
     <app-transformations [items]="transformaciones" />
     <app-testimonials [testimonios]="testimonios" [filtros]="filtros" />
     <app-faq [grupos]="preguntas" />
-    <app-booking />
+    <!-- ngSkipHydration: la reserva lee datos del navegador (citas y equipo), así que se dibuja solo en el navegador -->
+    <app-booking ngSkipHydration />
 
     <app-site-footer />
   `

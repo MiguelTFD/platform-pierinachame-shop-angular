@@ -14,13 +14,19 @@
         Recepción te escribirá pronto por WhatsApp para confirmar tu horario.
       </p>
 
-      <div class="summary-box">
-        <div class="summary-item"><span>Tipo de solicitud:</span><b>{{ cita()?.modo ?? '-' }}</b></div>
-        <div class="summary-item"><span>Servicio:</span><b>{{ cita()?.servicio ?? '-' }}</b></div>
-        <div class="summary-item"><span>Fecha preferida:</span><b>{{ cita()?.fecha ?? '-' }}</b></div>
-        <div class="summary-item"><span>Hora preferida:</span><b>{{ cita()?.hora ?? '-' }}</b></div>
-        <div class="summary-item"><span>Tu WhatsApp:</span><b>{{ cita()?.celular ?? '-' }}</b></div>
-      </div>
+      @if (cita(); as c) {
+        <div class="summary-box">
+          <div class="summary-item"><span>Tipo de solicitud:</span><b>{{ c.modo }}</b></div>
+          <div class="summary-item"><span>Servicio:</span><b>{{ c.servicio }}</b></div>
+          <div class="summary-item"><span>Día:</span><b>{{ fechaLarga(c.fecha) }}</b></div>
+          <div class="summary-item"><span>Hora:</span><b>{{ horaAMPM(c.hora) }}</b></div>
+          <div class="summary-item"><span>Tu WhatsApp:</span><b>{{ c.celular }}</b></div>
+        </div>
+      } @else {
+        <div class="summary-box">
+          <div class="summary-item"><span>No encontramos tu solicitud.</span><b><a routerLink="/" fragment="reservar">Reservar</a></b></div>
+        </div>
+      }
 
       <div class="confirm-actions">
         <a [href]="enlaceWhatsapp()" target="_blank" rel="noopener" class="btn primary">Confirmar por WhatsApp →</a>

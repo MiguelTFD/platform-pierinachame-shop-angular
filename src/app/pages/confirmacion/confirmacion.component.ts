@@ -1,11 +1,12 @@
-import { Component, inject, signal, afterNextRender } from '@angular/core';
+import { Component, afterNextRender, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CitaService } from '../../core/cita.service';
+import { CitasService } from '../../core/citas.service';
+import { fechaLarga, horaAMPM } from '../../core/fechas';
 import { Cita } from '../../core/models';
 import { SiteFooterComponent } from '../../layout/site-footer/site-footer.component';
 import { SiteHeaderComponent } from '../../layout/site-header/site-header.component';
 
-/** Página "Tu cita está en camino" (antes: confirmacion.html) */
+
 @Component({
   standalone: true,
   selector: 'app-confirmacion',
@@ -13,13 +14,15 @@ import { SiteHeaderComponent } from '../../layout/site-header/site-header.compon
   templateUrl: './confirmacion.component.html'
 })
 export class ConfirmacionComponent {
-  private readonly citas = inject(CitaService);
+  private readonly citas = inject(CitasService);
 
   protected readonly cita = signal<Cita | null>(null);
   protected readonly enlaceWhatsapp = signal('#');
+  protected readonly fechaLarga = fechaLarga;
+  protected readonly horaAMPM = horaAMPM;
 
   constructor() {
-    // los datos están en localStorage, que solo existe en el navegador
+    
     afterNextRender(() => {
       const c = this.citas.ultima();
       if (!c) return;

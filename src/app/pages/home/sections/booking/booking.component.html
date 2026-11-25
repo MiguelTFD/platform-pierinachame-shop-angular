@@ -1,11 +1,13 @@
 <section id="reservar">
   <div class="container">
-    <div class="booking-box" data-reveal>
-      <div class="booking-side">
+    <div class="booking-box apilado" data-reveal>
+
+      
+      <div class="booking-top">
         <div class="booking-info">
           <span class="eyebrow">Da el primer paso</span>
           <h2>Reserva tu <em>experiencia</em></h2>
-          <p>Déjanos tu nombre y WhatsApp. Recepción te escribe para confirmar tu cita; el precio final se define en la evaluación.</p>
+          <p>Elige el día y el horario que te acomode. Recepción te escribe por WhatsApp para confirmar; el precio final se define en la evaluación.</p>
           <ul>
             <li>Reserva de servicios</li>
             <li>Evaluación y asesoría de imagen</li>
@@ -13,7 +15,6 @@
           </ul>
         </div>
 
-        <!-- Mapa + botón que abre Google Maps -->
         <div class="booking-map">
           <div class="map-frame">
             <a class="map-link" target="_blank" rel="noopener" aria-label="Ver la ubicación en Google Maps" [href]="mapsUrl">
@@ -29,6 +30,7 @@
         </div>
       </div>
 
+      <!-- ABAJO: el formulario a todo el ancho -->
       <form class="form-card" [formGroup]="form" (ngSubmit)="enviar()">
         <h3>¿Qué deseas hacer?</h3>
         <div class="mode">
@@ -38,60 +40,96 @@
                   (click)="modo.set('Solicitar evaluación')">Solicitar evaluación</button>
         </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label for="name">Nombre</label>
-            <input type="text" id="name" formControlName="nombre" placeholder="Tu nombre"
-                   autocomplete="name" (input)="limpiarNombre($event)">
-            @if (error('nombre')) { <small class="field-err">{{ error('nombre') }}</small> }
-          </div>
-          <div class="field">
-            <label for="celular">WhatsApp / celular</label>
-            <input type="tel" id="celular" formControlName="celular" placeholder="9XX XXX XXX"
-                   maxlength="9" inputmode="numeric" autocomplete="tel" (input)="limpiarCelular($event)">
-            @if (error('celular')) { <small class="field-err">{{ error('celular') }}</small> }
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="service">Servicio de interés</label>
-          <select id="service" formControlName="servicio">
-            <option value="Aún no lo sé · quiero asesoría">Aún no lo sé · quiero asesoría</option>
-            @for (s of servicios; track s) {
-              <option [value]="s">{{ s }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="form-row">
-          <div class="field">
-            <label for="date">Fecha preferida</label>
-            <input type="date" id="date" formControlName="fecha" [min]="hoy" [max]="finDeAnio">
-            @if (error('fecha')) { <small class="field-err">{{ error('fecha') }}</small> }
-          </div>
-          <div class="field">
-            <label for="t-hora">Hora preferida</label>
-            <div class="time-row">
-              <select id="t-hora" aria-label="Hora" formControlName="hora">
-                <option value="">Hora</option>
-                @for (h of horas; track h) { <option [value]="h">{{ h }}</option> }
-              </select>
-              <select aria-label="Minutos" formControlName="min">
-                <option value="">Min</option>
-                @for (m of minutos; track m) { <option [value]="m">{{ m }}</option> }
-              </select>
-              <select aria-label="a.m. o p.m." formControlName="ampm">
-                <option value="">AM/PM</option>
-                <option value="AM">a.m.</option>
-                <option value="PM">p.m.</option>
+        <div class="form-cols">
+          <!-- columna 1: tus datos -->
+          <div class="form-col">
+            <p class="paso"><b>1</b> Tus datos</p>
+            <div class="field">
+              <label for="name">Nombre</label>
+              <input type="text" id="name" formControlName="nombre" placeholder="Tu nombre"
+                     autocomplete="name" (input)="limpiarNombre($event)">
+              @if (error('nombre')) { <small class="field-err">{{ error('nombre') }}</small> }
+            </div>
+            <div class="field">
+              <label for="celular">WhatsApp / celular</label>
+              <input type="tel" id="celular" formControlName="celular" placeholder="9XX XXX XXX"
+                     maxlength="9" inputmode="numeric" autocomplete="tel" (input)="limpiarCelular($event)">
+              @if (error('celular')) { <small class="field-err">{{ error('celular') }}</small> }
+            </div>
+            <div class="field">
+              <label for="service">Servicio de interés</label>
+              <select id="service" (change)="elegirServicio($event)">
+                <option [value]="asesoria" [selected]="servicio() === asesoria">{{ asesoria }}</option>
+                @for (g of grupos(); track g.categoria) {
+                  <optgroup [label]="g.categoria">
+                    @for (s of g.servicios; track s) {
+                      <option [value]="s" [selected]="servicio() === s">{{ s }}</option>
+                    }
+                  </optgroup>
+                }
               </select>
             </div>
-            @if (errorHora()) { <small class="field-err">{{ errorHora() }}</small> }
+          </div>
+
+          <!-- columna 2: día -->
+          <div class="form-col">
+            <p class="paso"><b>2</b> Elige el día</p>
+            <div class="dias" role="radiogroup" aria-label="Día">
+              @for (d of dias; track d) {
+                <button type="button" class="dia" role="radio" [attr.aria-checked]="dia() === d"
+                        [class.on]="dia() === d" (click)="elegirDia(d)">
+                  <small>{{ nombreDia(d) }}</small>
+                  <b>{{ numeroDia(d) }}</b>
+                  <small>{{ nombreMes(d) }}</small>
+                </button>
+              }
+            </div>
+
           </div>
         </div>
 
+        <!-- fila 2: horario tipo cine, centrado -->
+        <div class="form-horario">
+          <p class="paso"><b>3</b> Elige tu horario</p>
+          <div class="cine">
+            <div class="pantalla" aria-hidden="true">Horarios del {{ nombreDia(dia()) }} {{ numeroDia(dia()) }}</div>
+
+            @for (f of franjas(); track f.nombre) {
+              <div class="franja">
+                <span class="franja-nombre">{{ f.nombre }}</span>
+                <div class="asientos">
+                  @for (a of f.asientos; track a.hora) {
+                    <button type="button" class="asiento"
+                            [class.ocupado]="a.estado !== 'libre'" [class.on]="hora() === a.hora"
+                            [disabled]="a.estado !== 'libre'" [attr.aria-pressed]="hora() === a.hora"
+                            [attr.aria-label]="a.texto + (a.estado === 'libre' ? '' : ' (no disponible)')"
+                            (click)="elegirHora(a)">{{ a.texto }}</button>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (!hayLibres()) {
+              <p class="sin-horarios">No quedan horarios libres este día. Prueba con otro día.</p>
+            }
+
+            <div class="leyenda" aria-hidden="true">
+              <span><i class="l-libre"></i>Disponible</span>
+              <span><i class="l-ocupado"></i>Ocupado</span>
+              <span><i class="l-on"></i>Tu elección</span>
+            </div>
+          </div>
+        </div>
+
+        @if (resumen()) {
+          <p class="resumen-cita"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i> {{ resumen() }}</p>
+        } @else if (enviado()) {
+          <small class="field-err">Elige un horario disponible.</small>
+        }
+        @if (errorReserva()) { <small class="field-err">{{ errorReserva() }}</small> }
+
         <button class="btn primary" type="submit">Solicitar cita →</button>
-        <small>Fecha y hora son una preferencia · Recepción te confirma por WhatsApp.</small>
+        <small>Recepción te confirma por WhatsApp. El precio final se define en la evaluación.</small>
       </form>
     </div>
   </div>

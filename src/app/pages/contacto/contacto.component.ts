@@ -5,7 +5,7 @@ import { SiteHeaderComponent } from '../../layout/site-header/site-header.compon
 import { RevealDirective } from '../../shared/reveal.directive';
 import { SectionHeaderComponent } from '../../shared/section-header/section-header.component';
 
-/** Página de contacto (antes: contacto.html) */
+
 @Component({
   standalone: true,
   selector: 'app-contacto',
