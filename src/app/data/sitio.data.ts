@@ -1,9 +1,4 @@
-/* =========================================================
-   Contenido de la web.
-   Antes estaba escrito a mano en el HTML; ahora vive aquí y
-   los componentes lo recorren con @for. Para agregar un
-   servicio, testimonio o pregunta, solo editas esta lista.
-   ========================================================= */
+
 import {
   CategoriaServicio, Estadistica, GrupoPreguntas, Testimonio, Transformacion
 } from '../core/models';

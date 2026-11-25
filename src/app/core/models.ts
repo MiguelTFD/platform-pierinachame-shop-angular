@@ -1,4 +1,3 @@
-/* Tipos (interfaces) que usa toda la app */
 
 export interface CategoriaServicio {
   nombre: string;
@@ -36,29 +35,60 @@ export interface Estadistica {
   texto: string;
 }
 
+/* ---------- equipo ---------- */
+export interface Profesional {
+  id: string;
+  nombre: string;
+  especialidad: string;   // ej. "Manicurista"
+  categorias: string[];   // categorías que atiende
+  foto: string;           // imagen en base64 (la sube Pierina) o '' = sin foto
+  celular: string;
+  activo: boolean;
+}
+
+/* ---------- citas ---------- */
+export type EstadoCita = 'pendiente' | 'confirmada' | 'atendida' | 'cancelada';
+export type MetodoPago = 'Efectivo' | 'Yape' | 'Plin' | 'Tarjeta';
+
+export interface Pago {
+  metodo: MetodoPago;
+  monto: number;
+  fecha: string;          // YYYY-MM-DD
+}
+
 export interface Cita {
-  modo: string;
+  id: string;
+  modo: string;           // "Cita para un servicio" | "Solicitar evaluación"
   nombre: string;
   celular: string;
   servicio: string;
-  fecha: string;
-  hora: string;
+  categoria: string;
+  profesionalId: string;
+  fecha: string;          // YYYY-MM-DD
+  hora: string;           // HH:MM (24 h)
+  duracion: number;       // minutos
+  precio: number;         // S/
+  estado: EstadoCita;
+  pago: Pago | null;
+  origen: 'web' | 'panel';
 }
 
 /* ---------- panel ---------- */
-export type Rol = 'admin' | 'manicurista' | 'lashista';
+export type Rol = 'admin' | 'profesional';
 
 export interface Usuario {
   email: string;
   clave: string;
   nombre: string;
   rol: Rol;
+  profesionalId: string;  // '' si no está vinculada a una profesional
 }
 
 export interface Sesion {
   email: string;
   nombre: string;
   rol: Rol;
+  profesionalId: string;
 }
 
 export interface ItemMenu {
@@ -83,7 +113,16 @@ export interface Servicio {
   cat: string;
   dur: number;
   precio: number;
-  prof: string;
   desc: string;
   activo: boolean;
+}
+
+export interface Producto {
+  id: string;
+  nombre: string;
+  marca: string;
+  categoria: string;
+  precio: number;
+  stock: number;
+  minimo: number;
 }

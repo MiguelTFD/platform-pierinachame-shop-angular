@@ -1,11 +1,7 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-/**
- * localStorage / sessionStorage "seguros".
- * Tu proyecto usa SSR (server.ts): en el servidor no existe localStorage,
- * así que aquí revisamos si estamos en el navegador antes de usarlo.
- */
+
 @Injectable({ providedIn: 'root' })
 export class StorageService {
   private readonly enNavegador = isPlatformBrowser(inject(PLATFORM_ID));

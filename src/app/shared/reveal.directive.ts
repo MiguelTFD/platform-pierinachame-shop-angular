@@ -1,10 +1,6 @@
 import { Directive, ElementRef, afterNextRender, inject, signal } from '@angular/core';
 
-/**
- * Aparición al hacer scroll (antes: activarAparicionScroll en script.js).
- * Basta con poner el atributo data-reveal en cualquier elemento:
- *   <div data-reveal style="--delay:.1s">...</div>
- */
+
 @Directive({
   standalone: true,
   selector: '[data-reveal]',
@@ -16,7 +12,7 @@ export class RevealDirective {
   constructor() {
     const el = inject(ElementRef<HTMLElement>).nativeElement;
 
-    // afterNextRender solo corre en el navegador (no en el servidor SSR)
+    
     afterNextRender(() => {
       if (!('IntersectionObserver' in window)) {
         this.visible.set(true);

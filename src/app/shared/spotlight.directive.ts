@@ -1,9 +1,6 @@
 import { Directive, ElementRef, HostListener, inject } from '@angular/core';
 
-/**
- * Brillo que sigue al mouse en las tarjetas (.card).
- * Usa @HostListener, como en tu guía.
- */
+
 @Directive({ standalone: true,
   selector: '.card' })
 export class SpotlightDirective {
