@@ -6,6 +6,7 @@
    ========================================================= */
 @import './styles/site.css';
 @import './styles/portal.css';
+@import './styles/panel-extra.css';
 
 html {
   scroll-behavior: smooth;
