@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Servicio } from '../../../core/models';
-import { CATEGORIAS_PANEL } from '../../../data/usuarios.data';
+import { CategoriasService } from '../../../core/categorias.service';
 
 /**
  * Cajón lateral para crear o editar un servicio.
@@ -20,11 +20,13 @@ export class ServicioDrawerComponent implements OnChanges {
   @Input() abierto = false;
   @Input() servicio: Servicio | null = null;
   @Input() codigo = '';
+  /** Categoría que se pone sola al crear (cuando se abre desde Categorías) */
+  @Input() categoriaInicial = '';
 
   @Output() guardar = new EventEmitter<Omit<Servicio, 'id'>>();
   @Output() cerrar = new EventEmitter<void>();
 
-  protected readonly categorias = CATEGORIAS_PANEL;
+  protected readonly categorias = inject(CategoriasService);
   private readonly inputNombre = viewChild.required<ElementRef<HTMLInputElement>>('inputNombre');
   private ultimoFoco: HTMLElement | null = null;
 
@@ -33,7 +35,6 @@ export class ServicioDrawerComponent implements OnChanges {
     cat: ['', Validators.required],
     dur: [60, [Validators.required, Validators.min(5)]],
     precio: [0, [Validators.required, Validators.min(0)]],
-    prof: [''],
     desc: [''],
     activo: [true]
   });
@@ -45,8 +46,8 @@ export class ServicioDrawerComponent implements OnChanges {
     if (this.abierto) {
       const s = this.servicio;
       this.form.reset({
-        nombre: s?.nombre ?? '', cat: s?.cat ?? '', dur: s?.dur ?? 60, precio: s?.precio ?? 0,
-        prof: s?.prof ?? '', desc: s?.desc ?? '', activo: s?.activo ?? true
+        nombre: s?.nombre ?? '', cat: s?.cat ?? this.categoriaInicial, dur: s?.dur ?? 60, precio: s?.precio ?? 0,
+        desc: s?.desc ?? '', activo: s?.activo ?? true
       });
       this.ultimoFoco = document.activeElement as HTMLElement | null;
       setTimeout(() => this.inputNombre().nativeElement.focus(), 120);
@@ -68,7 +69,7 @@ export class ServicioDrawerComponent implements OnChanges {
     const v = this.form.getRawValue();
     this.guardar.emit({
       nombre: v.nombre.trim(), cat: v.cat, dur: Number(v.dur), precio: Number(v.precio),
-      prof: v.prof.trim(), desc: v.desc.trim(), activo: v.activo
+      desc: v.desc.trim(), activo: v.activo
     });
   }
 }

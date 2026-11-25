@@ -18,7 +18,7 @@
       <label for="s-cat">Categoría</label>
       <select id="s-cat" formControlName="cat" required>
         <option value="">Elige una categoría</option>
-        @for (c of categorias; track c) { <option [value]="c">{{ c }}</option> }
+        @for (c of categorias.lista(); track c) { <option [value]="c">{{ c }}</option> }
       </select>
     </div>
     <p class="code">Código: <b>{{ codigo }}</b></p>
@@ -31,10 +31,6 @@
         <label for="s-precio">Precio (S/)</label>
         <input id="s-precio" type="number" min="0" step="1" inputmode="decimal" placeholder="120" formControlName="precio" required>
       </div>
-    </div>
-    <div class="f">
-      <label for="s-prof">Profesional</label>
-      <input id="s-prof" maxlength="60" placeholder="Ej. Marisol Díaz" formControlName="prof">
     </div>
     <div class="f">
       <label for="s-desc">Descripción</label>
