@@ -6,16 +6,7 @@ import { ContactoComponent } from './pages/contacto/contacto.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 
-/*
-  Antes cada página era un .html distinto (index.html, contacto.html, ...).
-  Ahora es una sola app y el Router muestra el componente según la URL:
 
-    /              → HomeComponent          (index.html)
-    /contacto      → ContactoComponent      (contacto.html)
-    /confirmacion  → ConfirmacionComponent  (confirmacion.html)
-    /login         → LoginComponent         (login.html)
-    /panel         → PanelComponent         (panel.html)  🔒 necesita sesión
-*/
 export const routes: Routes = [
   {
     path: '',
