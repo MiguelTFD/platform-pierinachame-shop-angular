@@ -1,0 +1,60 @@
+<div class="app">
+  <aside class="side" [class.open]="menuAbierto()" aria-label="Menú del panel">
+    <a routerLink="/" class="brand-logo">Pierina <span>Chame</span><small>Beauty Studio</small></a>
+
+    <div class="side-user">
+      <div class="avatar" aria-hidden="true">{{ inicial() }}</div>
+      <div><b>{{ sesion()?.nombre }}</b><span>{{ rol()?.etiqueta }}</span></div>
+    </div>
+
+    <!-- menú según el rol -->
+    <nav aria-label="Secciones">
+      @for (g of rol()?.grupos ?? []; track g.titulo) {
+        <div class="nav-group">
+          <h3>{{ g.titulo }}</h3>
+          @for (item of g.items; track item.id) {
+            <button type="button" class="nav-item" [class.on]="vista() === item.id"
+                    [attr.aria-current]="vista() === item.id ? 'page' : null" (click)="ir(item.id)">
+              <i class="fa-solid" [class]="item.icono" aria-hidden="true"></i>{{ item.texto }}
+            </button>
+          }
+        </div>
+      }
+    </nav>
+
+    <div class="side-bottom">
+      <a class="nav-item" routerLink="/"><i class="fa-solid fa-globe" aria-hidden="true"></i> Ver la web</a>
+      <button class="nav-item" type="button" (click)="auth.salir()">
+        <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i> Cerrar sesión
+      </button>
+    </div>
+  </aside>
+  <div class="scrim" [class.open]="menuAbierto()" (click)="menuAbierto.set(false)"></div>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" type="button" aria-label="Abrir menú"
+              [attr.aria-expanded]="menuAbierto()" (click)="menuAbierto.set(!menuAbierto())">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+      <h1>{{ tituloVista() }}</h1>
+      <span class="spacer"></span>
+    </header>
+
+    <main class="view">
+      @switch (vista()) {
+        @case ('dashboard') {
+          <app-dashboard-view [sesion]="sesion()" />
+        }
+        @case ('servicios') {
+          @if (sesion()?.rol === 'admin') {
+            <app-servicios-view />
+          }
+        }
+        @default {
+          <!-- secciones aún sin contenido -->
+        }
+      }
+    </main>
+  </div>
+</div>

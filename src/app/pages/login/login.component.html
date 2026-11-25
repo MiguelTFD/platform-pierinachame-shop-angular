@@ -1,0 +1,86 @@
+<main class="auth">
+
+  <section class="auth-brand" aria-label="Pierina Chame Beauty Studio">
+    <div class="arch" aria-hidden="true"><div class="arch-inner"></div></div>
+
+    <a routerLink="/" class="brand-logo" aria-label="Volver a la web del estudio">
+      Pierina <span>Chame</span>
+      <small>Beauty Studio</small>
+    </a>
+
+    <div class="brand-copy">
+      <h1>Tu estudio,<br>siempre en orden.</h1>
+      <p>Agenda, clientas, servicios y caja en un solo lugar. Cada persona del equipo ve solo lo que necesita.</p>
+
+      <ul class="brand-points">
+        <li><i class="fa-regular fa-calendar-check" aria-hidden="true"></i> Agenda y citas al día</li>
+        <li><i class="fa-solid fa-user-group" aria-hidden="true"></i> Clientas y profesionales organizadas</li>
+        <li><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Acceso según tu rol</li>
+      </ul>
+    </div>
+
+    <p class="brand-foot">© 2026 Pierina Chame Beauty Studio · Satipo, Junín</p>
+  </section>
+
+  <section class="auth-main">
+    <div class="auth-card">
+      <h2>Bienvenida de vuelta</h2>
+      <p class="auth-sub">Ingresa para acceder al panel de tu estudio.</p>
+
+      <form id="login-form" [formGroup]="form" (ngSubmit)="ingresar()">
+        <div class="field" [class.has-error]="!!errorEmail()">
+          <label for="email">Correo electrónico</label>
+          <div class="input-wrap">
+            <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+            <input #inputEmail type="email" id="email" formControlName="email" placeholder="tucorreo@pierinachame.com"
+                   autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false"
+                   aria-describedby="email-error" [attr.aria-invalid]="errorEmail() ? true : null">
+          </div>
+          <p class="field-error" id="email-error" role="alert">{{ errorEmail() }}</p>
+        </div>
+
+        <div class="field" [class.has-error]="!!errorClave()">
+          <label for="clave">Contraseña</label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            <input #inputClave [type]="verClave() ? 'text' : 'password'" id="clave" formControlName="clave"
+                   placeholder="Tu contraseña" autocomplete="current-password"
+                   aria-describedby="clave-error" [attr.aria-invalid]="errorClave() ? true : null">
+            <button type="button" class="toggle-pass" (click)="alternarClave()"
+                    [attr.aria-label]="verClave() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                    [attr.aria-pressed]="verClave()">
+              <i class="fa-regular" [class.fa-eye]="!verClave()" [class.fa-eye-slash]="verClave()" aria-hidden="true"></i>
+            </button>
+          </div>
+          <p class="field-error" id="clave-error" role="alert">{{ errorClave() }}</p>
+        </div>
+
+        <div class="auth-options">
+          <label class="check">
+            <input type="checkbox" formControlName="recordar">
+            <span>Recordarme</span>
+          </label>
+          <button type="button" class="link-btn" aria-controls="ayuda-clave"
+                  [attr.aria-expanded]="mostrarAyuda()" (click)="mostrarAyuda.set(!mostrarAyuda())">
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
+        @if (mostrarAyuda()) {
+          <p class="help-note" id="ayuda-clave">Pídele a la administradora que restablezca tu contraseña desde <b>Usuarios y roles</b>.</p>
+        }
+
+        @if (errorGeneral()) {
+          <p class="form-error" role="alert">{{ errorGeneral() }}</p>
+        }
+
+        <button type="submit" class="btn-auth" [class.loading]="cargando()" [class.ok]="entrando()" [disabled]="cargando()">
+          <span class="btn-text">{{ entrando() ? 'Entrando…' : 'Ingresar' }}</span>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      <p class="auth-foot">¿Eres clienta? <a routerLink="/" fragment="reservar">Reserva tu cita en la web</a></p>
+    </div>
+  </section>
+</main>

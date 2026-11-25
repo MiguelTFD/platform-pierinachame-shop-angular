@@ -1,0 +1,53 @@
+<div class="bar">
+  <p>{{ srv.lista().length }} servicios en tu catálogo.</p>
+  <button class="btn-sm" type="button" (click)="abrir(null)">
+    <i class="fa-solid fa-plus" aria-hidden="true"></i> Nuevo servicio
+  </button>
+</div>
+
+@if (srv.lista().length) {
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Servicio</th><th>Categoría</th><th>Duración</th><th>Precio</th>
+          <th>Profesional</th><th>Estado</th><th><span class="sr">Acciones</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of srv.lista(); track s.id) {
+          <tr>
+            <td><b>{{ s.nombre }}</b><br><span style="color:var(--muted);font-size:13px">{{ s.id }}</span></td>
+            <td>{{ s.cat }}</td>
+            <td>{{ s.dur }} min</td>
+            <td>S/ {{ s.precio }}</td>
+            <td>{{ s.prof || '—' }}</td>
+            <td><span class="tag" [class.on]="s.activo" [class.off]="!s.activo">{{ s.activo ? 'Activo' : 'Inactivo' }}</span></td>
+            <td class="acc">
+              <button class="icon-btn" type="button" [attr.aria-label]="'Editar ' + s.nombre" (click)="abrir(s)">
+                <i class="fa-solid fa-pen" aria-hidden="true"></i>
+              </button>
+              <button class="icon-btn" type="button" [attr.aria-label]="'Eliminar ' + s.nombre" (click)="eliminar(s)">
+                <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <div class="empty">
+    <i class="fa-solid fa-scissors" aria-hidden="true"></i>
+    <h2>Aún no hay servicios</h2>
+    <p>Crea el primero con “Nuevo servicio”.</p>
+  </div>
+}
+
+<!-- El cajón recibe datos con [ ] y avisa con ( ): @Input y @Output -->
+<app-servicio-drawer
+  [abierto]="editando() !== null"
+  [servicio]="servicioEnCajon()"
+  [codigo]="servicioEnCajon()?.id ?? srv.siguienteId()"
+  (guardar)="guardar($event)"
+  (cerrar)="editando.set(null)" />

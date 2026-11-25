@@ -1,0 +1,37 @@
+<app-site-header />
+
+<section id="contacto" style="padding-top: 140px;">
+  <div class="container">
+    <app-section-header eyebrow="Ubicación" titulo="Visítanos en" destacado="Satipo"
+                        texto="Te esperamos con previa cita para brindarte una atención 100% personalizada." />
+
+    <div class="contact-center-box" data-reveal>
+      <div class="contact-info-centered">
+        <h3>Pierina Chame Studio</h3>
+        <ul class="contact-details-list">
+          <li><span>📍</span>
+            <a href="https://www.google.com/maps/place/Avenida+Francisco+Irazola,+Satipo+12261/@-11.255,-74.6374,17z"
+               target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Av. Francisco Irazola, Satipo</a></li>
+          <li><span>📞</span>
+            <a [href]="'https://wa.me/' + whatsapp" target="_blank" rel="noopener"
+               style="color: inherit; text-decoration: underline;">{{ whatsappTexto }}</a></li>
+          <li><span>🕒</span> Lunes a Sábado de 09:00 a.m. a 9:00 p.m.</li>
+        </ul>
+        <a [href]="'https://wa.me/' + whatsapp" target="_blank" rel="noopener" class="btn primary"
+           style="margin-top: 10px;">Escribir a WhatsApp</a>
+      </div>
+
+      <div class="map-container-centered">
+        <!-- El src va fijo (sin [ ]) para que Angular no lo bloquee por seguridad -->
+        <iframe
+          title="Mapa de Pierina Chame Studio"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3824.2!2d-74.6374!3d-11.255!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x910bc0ff3a050727%3A0xcbb669b6b28625e3!2sAvenida%20Francisco%20Irazola%2C%20Satipo%2012261!5e0!3m2!1ses!2spe!4v1620000000000!5m2!1ses!2spe"
+          width="100%" height="100%" style="border:0;" allowfullscreen loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-site-footer />

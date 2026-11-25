@@ -1,0 +1,15 @@
+/* Mensajes de error del formulario (nuevo en la versión Angular).
+   Selectores un poco más fuertes para ganarle a ".form-card small" del CSS global. */
+.form-card .field small.field-err {
+  display: block;
+  margin-top: 6px;
+  text-align: left;
+  color: #B5483F;
+  font-size: .8rem;
+  line-height: 1.35;
+}
+
+.form-card .field input.ng-invalid.ng-touched,
+.form-card .field select.ng-invalid.ng-touched {
+  border-color: #B5483F;
+}

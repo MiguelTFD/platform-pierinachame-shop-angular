@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+/* =========================================================
+   Estilos globales
+   - styles/site.css   → la web pública (todo va dentro de .site)
+   - styles/portal.css → login y panel   (todo va dentro de .portal)
+   Así los dos CSS ya no se pisan entre sí.
+   ========================================================= */
+@import './styles/site.css';
+@import './styles/portal.css';
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Jost', sans-serif;
+  background: #FBF7F0;
+  color: #4A3B32;
+}
+
+/* las etiquetas de los componentes (<app-...>) se comportan como bloques */
+.site,
+.portal {
+  display: block;
+  min-height: 100vh;
+}

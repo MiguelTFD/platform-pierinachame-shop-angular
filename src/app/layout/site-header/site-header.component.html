@@ -1,0 +1,38 @@
+<header [class.scrolled]="conScroll()">
+  <div class="container nav">
+    <a routerLink="/" fragment="inicio" class="logo" (click)="abrirMenu(false)">Pierina <span>Chame</span></a>
+
+    <ul [class.open]="menuAbierto()">
+      <li>
+        <a routerLink="/" fragment="servicios" [class.on]="spy.seccionActiva() === 'servicios'"
+           (click)="abrirMenu(false)">Servicios</a>
+      </li>
+      <li>
+        <a routerLink="/" fragment="transformaciones" [class.on]="spy.seccionActiva() === 'transformaciones'"
+           (click)="abrirMenu(false)">Transformaciones</a>
+      </li>
+      <li>
+        <a routerLink="/contacto" routerLinkActive="on" (click)="abrirMenu(false)">Contacto</a>
+      </li>
+      <li class="menu-cta">
+        <a routerLink="/" [fragment]="ctaFragment" class="btn primary" (click)="abrirMenu(false)">{{ ctaTexto }}</a>
+      </li>
+      @if (mostrarLogin) {
+        <li class="menu-login"><a routerLink="/login" (click)="abrirMenu(false)">Iniciar sesión</a></li>
+      }
+    </ul>
+
+    <div class="nav-actions">
+      @if (mostrarLogin) {
+        <a routerLink="/login" class="btn ghost small">Iniciar sesión</a>
+      }
+      <a routerLink="/" [fragment]="ctaFragment" class="btn small" [class.primary]="ctaPrimario">{{ ctaTexto }}</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menú"
+            [class.open]="menuAbierto()" [attr.aria-expanded]="menuAbierto()"
+            (click)="abrirMenu(!menuAbierto())">
+      <i></i><i></i>
+    </button>
+  </div>
+</header>
