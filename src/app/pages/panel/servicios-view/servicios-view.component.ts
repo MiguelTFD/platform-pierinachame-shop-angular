@@ -1,9 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { CategoriasService } from '../../../core/categorias.service';
 import { Servicio } from '../../../core/models';
 import { ServiciosService } from '../../../core/servicios.service';
+import { ProfesionalesService } from '../../../core/profesionales.service';
 import { ServicioDrawerComponent } from '../servicio-drawer/servicio-drawer.component';
 
-/** Tabla de servicios con crear / editar / eliminar (solo administradora) */
+
 @Component({
   standalone: true,
   selector: 'app-servicios-view',
@@ -12,8 +14,30 @@ import { ServicioDrawerComponent } from '../servicio-drawer/servicio-drawer.comp
 })
 export class ServiciosViewComponent {
   protected readonly srv = inject(ServiciosService);
+  private readonly profesionales = inject(ProfesionalesService);
+  private readonly categorias = inject(CategoriasService);
 
-  /** null = cajón cerrado · 'nuevo' = creando · Servicio = editando ese */
+
+  protected readonly filtro = signal('');
+
+ 
+  protected readonly opciones = computed(() => [
+    { valor: '', texto: 'Todas', cantidad: this.srv.lista().length },
+    ...this.categorias.lista().map((c) => ({
+      valor: c, texto: c, cantidad: this.srv.lista().filter((s) => s.cat === c).length
+    }))
+  ]);
+
+  /** Servicios que se muestran en la tabla según el filtro */
+  protected readonly filtrados = computed(() =>
+    this.srv.lista().filter((s) => !this.filtro() || s.cat === this.filtro()));
+
+  /** Nombres de las profesionales que hacen esa categoría */
+  protected quienes(cat: string): string {
+    return this.profesionales.deCategoria(cat).map((p) => p.nombre.split(' ')[0]).join(', ') || '—';
+  }
+
+
   protected readonly editando = signal<Servicio | 'nuevo' | null>(null);
 
   protected abrir(s: Servicio | null): void {
@@ -22,8 +46,8 @@ export class ServiciosViewComponent {
 
   protected guardar(datos: Omit<Servicio, 'id'>): void {
     const actual = this.editando();
-    if (actual && actual !== 'nuevo') this.srv.editar(actual.id, datos);
-    else this.srv.crear(datos);
+    if (actual && actual !== 'nuevo') this.srv.actualizar(actual.id, datos);
+    else this.srv.agregar({ id: this.srv.siguienteId(), ...datos });
     this.editando.set(null);
   }
 

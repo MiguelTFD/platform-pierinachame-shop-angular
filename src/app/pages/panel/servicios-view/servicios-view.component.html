@@ -1,28 +1,38 @@
 <div class="bar">
-  <p>{{ srv.lista().length }} servicios en tu catálogo.</p>
+  <p>{{ filtrados().length }} {{ filtro() ? 'servicios en ' + filtro() : 'servicios en tu catálogo' }}.</p>
   <button class="btn-sm" type="button" (click)="abrir(null)">
     <i class="fa-solid fa-plus" aria-hidden="true"></i> Nuevo servicio
   </button>
 </div>
 
-@if (srv.lista().length) {
+<!-- Filtro por categoría -->
+<div class="filtro-chips" role="tablist" aria-label="Filtrar por categoría">
+  @for (o of opciones(); track o.valor) {
+    <button type="button" class="chip-filtro" role="tab" [class.on]="filtro() === o.valor"
+            [attr.aria-selected]="filtro() === o.valor" (click)="filtro.set(o.valor)">
+      {{ o.texto }} <span>{{ o.cantidad }}</span>
+    </button>
+  }
+</div>
+
+@if (filtrados().length) {
   <div class="table-wrap">
-    <table>
+    <table class="tabla-movil">
       <thead>
         <tr>
           <th>Servicio</th><th>Categoría</th><th>Duración</th><th>Precio</th>
-          <th>Profesional</th><th>Estado</th><th><span class="sr">Acciones</span></th>
+          <th>Profesionales</th><th>Estado</th><th><span class="sr">Acciones</span></th>
         </tr>
       </thead>
       <tbody>
-        @for (s of srv.lista(); track s.id) {
+        @for (s of filtrados(); track s.id) {
           <tr>
-            <td><b>{{ s.nombre }}</b><br><span style="color:var(--muted);font-size:13px">{{ s.id }}</span></td>
-            <td>{{ s.cat }}</td>
-            <td>{{ s.dur }} min</td>
-            <td>S/ {{ s.precio }}</td>
-            <td>{{ s.prof || '—' }}</td>
-            <td><span class="tag" [class.on]="s.activo" [class.off]="!s.activo">{{ s.activo ? 'Activo' : 'Inactivo' }}</span></td>
+            <td data-label="Servicio"><b>{{ s.nombre }}</b><br><span style="color:var(--muted);font-size:13px">{{ s.id }}</span></td>
+            <td data-label="Categoría">{{ s.cat }}</td>
+            <td data-label="Duración">{{ s.dur }} min</td>
+            <td data-label="Precio">S/ {{ s.precio }}</td>
+            <td data-label="Profesionales">{{ quienes(s.cat) }}</td>
+            <td data-label="Estado"><span class="tag" [class.on]="s.activo" [class.off]="!s.activo">{{ s.activo ? 'Activo' : 'Inactivo' }}</span></td>
             <td class="acc">
               <button class="icon-btn" type="button" [attr.aria-label]="'Editar ' + s.nombre" (click)="abrir(s)">
                 <i class="fa-solid fa-pen" aria-hidden="true"></i>
@@ -39,8 +49,8 @@
 } @else {
   <div class="empty">
     <i class="fa-solid fa-scissors" aria-hidden="true"></i>
-    <h2>Aún no hay servicios</h2>
-    <p>Crea el primero con “Nuevo servicio”.</p>
+    <h2>{{ filtro() ? 'Sin servicios en ' + filtro() : 'Aún no hay servicios' }}</h2>
+    <p>Crea uno con “Nuevo servicio”.</p>
   </div>
 }
 
@@ -49,5 +59,6 @@
   [abierto]="editando() !== null"
   [servicio]="servicioEnCajon()"
   [codigo]="servicioEnCajon()?.id ?? srv.siguienteId()"
+  [categoriaInicial]="filtro()"
   (guardar)="guardar($event)"
   (cerrar)="editando.set(null)" />
