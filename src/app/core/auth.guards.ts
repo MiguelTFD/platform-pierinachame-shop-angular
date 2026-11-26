@@ -2,14 +2,24 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 
-/** Protege /panel: si no iniciaste sesión, te manda a /login */
+/** Protege /panel: si NO iniciaste sesión, te manda a /login */
 export const authGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
-  return auth.estaLogueada() ? true : inject(Router).createUrlTree(['/login']);
+
+  if (auth.isLogged() === false) {
+    return inject(Router).createUrlTree(['/login']);
+  }
+
+  return true;
 };
 
-/** En /login: si ya iniciaste sesión, te manda directo al panel */
+/** Protege /login: si YA iniciaste sesión, no tiene sentido ver el login, te manda al panel */
 export const invitadaGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
-  return auth.estaLogueada() ? inject(Router).createUrlTree(['/panel']) : true;
+
+  if (auth.isLogged() === true) {
+    return inject(Router).createUrlTree(['/panel']);
+  }
+
+  return true;
 };
