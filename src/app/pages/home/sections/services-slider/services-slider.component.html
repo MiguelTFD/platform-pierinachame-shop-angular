@@ -1,0 +1,58 @@
+<section id="servicios" class="services">
+  <div class="container">
+    <app-section-header eyebrow="Catálogo" titulo="Nuestros" destacado="servicios"
+                        texto="Desliza para ver cada categoría." />
+  </div>
+
+  <div class="svc-slider" data-reveal role="region" aria-roledescription="carrusel" aria-label="Categorías de servicios">
+    <div class="svc-viewport" tabindex="0" #viewport
+         [class.drag]="arrastrando()"
+         (keydown)="teclado($event)"
+         (pointerdown)="bajar($event)"
+         (pointermove)="arrastrar($event)"
+         (pointerup)="soltar($event)"
+         (pointercancel)="cancelar()"
+         (pointerleave)="salir($event)">
+
+      @for (c of categorias; track c.nombre; let i = $index) {
+        <article class="svc-card" #tarjeta
+                 [attr.aria-label]="c.nombre"
+                 [style.--d]="'' + pos()[i]"
+                 [style.--ad]="'' + (pos()[i] < 0 ? -pos()[i] : pos()[i])"
+                 [class.is-active]="pos()[i] === 0"
+                 [class.is-hidden]="oculta(i)"
+                 [attr.aria-hidden]="oculta(i)"
+                 (click)="clicTarjeta(i)">
+          <div class="svc-photo">
+            <img [src]="c.imagen" [alt]="'Servicio de ' + c.nombre" loading="lazy" decoding="async" draggable="false">
+          </div>
+          <span class="svc-count">{{ c.servicios.length }} servicios</span>
+          <h3>{{ c.nombre }}</h3>
+          <ul>
+            @for (s of c.servicios; track s) {
+              <li>{{ s }}</li>
+            }
+          </ul>
+          <a href="#reservar" class="btn primary" [tabIndex]="pos()[i] === 0 ? 0 : -1">Reservar</a>
+        </article>
+      }
+    </div>
+
+    <div class="svc-controls">
+      <button class="svc-nav" type="button" aria-label="Categoría anterior" (click)="mover(-1)">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <div class="svc-dots">
+        @for (c of categorias; track c.nombre; let i = $index) {
+          <button type="button" [class.on]="i === activo()" [attr.aria-label]="'Ir a ' + c.nombre"
+                  (click)="irA(i)"></button>
+        }
+      </div>
+      <button class="svc-nav" type="button" aria-label="Categoría siguiente" (click)="mover(1)">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>

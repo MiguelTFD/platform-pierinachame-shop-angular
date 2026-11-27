@@ -1,0 +1,46 @@
+<div class="drawer-bg" [class.open]="abierto" (click)="cerrar.emit()"></div>
+
+<aside class="drawer" [class.open]="abierto" [attr.aria-hidden]="!abierto" aria-labelledby="drawer-titulo">
+  <div class="drawer-head">
+    <h2 id="drawer-titulo">{{ servicio ? 'Editar servicio' : 'Nuevo servicio' }}</h2>
+    <button class="icon-btn" type="button" aria-label="Cerrar" (click)="cerrar.emit()">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <!-- ngNativeValidate: el navegador muestra sus avisos de "campo obligatorio", como en tu versión HTML -->
+  <form id="srv-form" ngNativeValidate [formGroup]="form" (ngSubmit)="enviar()">
+    <div class="f">
+      <label for="s-nombre">Nombre del servicio</label>
+      <input #inputNombre id="s-nombre" formControlName="nombre" required maxlength="60" placeholder="Ej. Microshading de cejas">
+    </div>
+    <div class="f">
+      <label for="s-cat">Categoría</label>
+      <select id="s-cat" formControlName="cat" required>
+        <option value="">Elige una categoría</option>
+        @for (c of categorias.lista(); track c) { <option [value]="c">{{ c }}</option> }
+      </select>
+    </div>
+    <p class="code">Código: <b>{{ codigo }}</b></p>
+    <div class="row2">
+      <div class="f">
+        <label for="s-dur">Duración (min)</label>
+        <input id="s-dur" type="number" min="5" step="5" inputmode="numeric" placeholder="60" formControlName="dur" required>
+      </div>
+      <div class="f">
+        <label for="s-precio">Precio (S/)</label>
+        <input id="s-precio" type="number" min="0" step="1" inputmode="decimal" placeholder="120" formControlName="precio" required>
+      </div>
+    </div>
+    <div class="f">
+      <label for="s-desc">Descripción</label>
+      <textarea id="s-desc" maxlength="200" placeholder="Qué incluye el servicio" formControlName="desc"></textarea>
+    </div>
+    <label class="check"><input type="checkbox" formControlName="activo"><span>Servicio activo</span></label>
+  </form>
+
+  <div class="drawer-foot">
+    <button type="button" class="btn-sm btn-ghost" (click)="cerrar.emit()">Cancelar</button>
+    <button type="submit" form="srv-form" class="btn-sm">Guardar servicio</button>
+  </div>
+</aside>

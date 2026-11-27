@@ -1,0 +1,42 @@
+<section class="hero" id="inicio">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">Salón de belleza exclusivo · Satipo</span>
+      <h1>
+        <span class="line"><span>Realza tu</span></span>
+        <span class="line"><span>belleza</span></span>
+        <span class="line"><span><em>natural</em></span></span>
+      </h1>
+      <p class="lead">Uñas, cejas, labios, pestañas, cabello y maquillaje en un solo lugar. Atención personalizada, solo con cita.</p>
+      <div class="hero-actions">
+        <a href="#reservar" class="btn primary">Reservar mi cita</a>
+        <a href="#servicios" class="btn">Ver servicios</a>
+      </div>
+      <div class="rating">
+        <div class="avatars">
+          @for (a of avatares; track a) {
+            <i>{{ a }}</i>
+          }
+        </div>
+        <div>
+          <div class="stars">★★★★★</div>
+          <b>Más de 150</b><small>clientas satisfechas</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="arch" #arco>
+      <div class="ring-badge">Calidad<br>Premium</div>
+
+      <div class="hero-carousel">
+        <div class="carousel-track">
+          @for (foto of fotos; track foto.src; let i = $index) {
+            <img [src]="foto.src" [alt]="foto.alt" class="carousel-img" [class.active]="i === actual()">
+          }
+        </div>
+      </div>
+
+      <span>Pierina Chame · Beauty Studio</span>
+    </div>
+  </div>
+</section>

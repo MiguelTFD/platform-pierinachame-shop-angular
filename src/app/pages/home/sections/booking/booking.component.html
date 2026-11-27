@@ -1,0 +1,136 @@
+<section id="reservar">
+  <div class="container">
+    <div class="booking-box apilado" data-reveal>
+
+      
+      <div class="booking-top">
+        <div class="booking-info">
+          <span class="eyebrow">Da el primer paso</span>
+          <h2>Reserva tu <em>experiencia</em></h2>
+          <p>Elige el día y el horario que te acomode. Recepción te escribe por WhatsApp para confirmar; el precio final se define en la evaluación.</p>
+          <ul>
+            <li>Reserva de servicios</li>
+            <li>Evaluación y asesoría de imagen</li>
+            <li>Atención personalizada</li>
+          </ul>
+        </div>
+
+        <div class="booking-map">
+          <div class="map-frame">
+            <a class="map-link" target="_blank" rel="noopener" aria-label="Ver la ubicación en Google Maps" [href]="mapsUrl">
+              <img src="img/mapita.png" alt="Mapa de la ubicación: Av. Francisco Irazola, Satipo" loading="lazy">
+            </a>
+            <a class="map-btn" target="_blank" rel="noopener" [href]="mapsUrl">Abrir en Google Maps ↗</a>
+          </div>
+          <div class="map-info">
+            <b>Pierina Chame Studio</b>
+            <span>📍 Av. Francisco Irazola, Satipo, Junín</span>
+            <span>🕒 {{ horario }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABAJO: el formulario a todo el ancho -->
+      <form class="form-card" [formGroup]="form" (ngSubmit)="enviar()">
+        <h3>¿Qué deseas hacer?</h3>
+        <div class="mode">
+          <button type="button" [class.on]="modo() === 'Cita para un servicio'"
+                  (click)="modo.set('Cita para un servicio')">Cita para un servicio</button>
+          <button type="button" [class.on]="modo() === 'Solicitar evaluación'"
+                  (click)="modo.set('Solicitar evaluación')">Solicitar evaluación</button>
+        </div>
+
+        <div class="form-cols">
+          <!-- columna 1: tus datos -->
+          <div class="form-col">
+            <p class="paso"><b>1</b> Tus datos</p>
+            <div class="field">
+              <label for="name">Nombre</label>
+              <input type="text" id="name" formControlName="nombre" placeholder="Tu nombre"
+                     autocomplete="name" (input)="limpiarNombre($event)">
+              @if (error('nombre')) { <small class="field-err">{{ error('nombre') }}</small> }
+            </div>
+            <div class="field">
+              <label for="celular">WhatsApp / celular</label>
+              <input type="tel" id="celular" formControlName="celular" placeholder="9XX XXX XXX"
+                     maxlength="9" inputmode="numeric" autocomplete="tel" (input)="limpiarCelular($event)">
+              @if (error('celular')) { <small class="field-err">{{ error('celular') }}</small> }
+            </div>
+            <div class="field">
+              <label for="service">Servicio de interés</label>
+              <select id="service" (change)="elegirServicio($event)">
+                <option [value]="asesoria" [selected]="servicio() === asesoria">{{ asesoria }}</option>
+                @for (g of grupos(); track g.categoria) {
+                  <optgroup [label]="g.categoria">
+                    @for (s of g.servicios; track s) {
+                      <option [value]="s" [selected]="servicio() === s">{{ s }}</option>
+                    }
+                  </optgroup>
+                }
+              </select>
+            </div>
+          </div>
+
+          <!-- columna 2: día -->
+          <div class="form-col">
+            <p class="paso"><b>2</b> Elige el día</p>
+            <div class="dias" role="radiogroup" aria-label="Día">
+              @for (d of dias; track d) {
+                <button type="button" class="dia" role="radio" [attr.aria-checked]="dia() === d"
+                        [class.on]="dia() === d" (click)="elegirDia(d)">
+                  <small>{{ nombreDia(d) }}</small>
+                  <b>{{ numeroDia(d) }}</b>
+                  <small>{{ nombreMes(d) }}</small>
+                </button>
+              }
+            </div>
+
+          </div>
+        </div>
+
+        <!-- fila 2: horario tipo cine, centrado -->
+        <div class="form-horario">
+          <p class="paso"><b>3</b> Elige tu horario</p>
+          <div class="cine">
+            <div class="pantalla" aria-hidden="true">Horarios del {{ nombreDia(dia()) }} {{ numeroDia(dia()) }}</div>
+
+            @for (f of franjas(); track f.nombre) {
+              <div class="franja">
+                <span class="franja-nombre">{{ f.nombre }}</span>
+                <div class="asientos">
+                  @for (a of f.asientos; track a.hora) {
+                    <button type="button" class="asiento"
+                            [class.ocupado]="a.estado !== 'libre'" [class.on]="hora() === a.hora"
+                            [disabled]="a.estado !== 'libre'" [attr.aria-pressed]="hora() === a.hora"
+                            [attr.aria-label]="a.texto + (a.estado === 'libre' ? '' : ' (no disponible)')"
+                            (click)="elegirHora(a)">{{ a.texto }}</button>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (!hayLibres()) {
+              <p class="sin-horarios">No quedan horarios libres este día. Prueba con otro día.</p>
+            }
+
+            <div class="leyenda" aria-hidden="true">
+              <span><i class="l-libre"></i>Disponible</span>
+              <span><i class="l-ocupado"></i>Ocupado</span>
+              <span><i class="l-on"></i>Tu elección</span>
+            </div>
+          </div>
+        </div>
+
+        @if (resumen()) {
+          <p class="resumen-cita"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i> {{ resumen() }}</p>
+        } @else if (enviado()) {
+          <small class="field-err">Elige un horario disponible.</small>
+        }
+        @if (errorReserva()) { <small class="field-err">{{ errorReserva() }}</small> }
+
+        <button class="btn primary" type="submit">Solicitar cita →</button>
+        <small>Recepción te confirma por WhatsApp. El precio final se define en la evaluación.</small>
+      </form>
+    </div>
+  </div>
+</section>
